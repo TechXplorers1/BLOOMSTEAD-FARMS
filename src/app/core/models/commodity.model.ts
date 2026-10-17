@@ -6,7 +6,16 @@ export interface CommoditySpecification {
 export interface Commodity {
   readonly id: string;
   readonly name: string;
-  readonly category: 'Oilseeds' | 'Grains' | 'Roots & tubers' | 'Spices';
+  readonly category:
+    | 'Cocoa'
+    | 'Fruit'
+    | 'Grains'
+    | 'Industrial crops'
+    | 'Oilseeds'
+    | 'Oils & fats'
+    | 'Roots & tubers'
+    | 'Spices'
+    | 'Spices & botanicals';
   readonly origin: string;
   readonly description: string;
   readonly image: string;

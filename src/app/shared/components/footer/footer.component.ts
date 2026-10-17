@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { IconComponent } from '../icon/icon.component';
 
 @Component({
   selector: 'bf-footer',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, IconComponent],
   template: `
     <footer class="site-footer">
       <div class="container footer-main">
@@ -13,8 +14,8 @@ import { RouterLink } from '@angular/router';
             <span class="brand-mark" aria-hidden="true">b<span>.</span></span>
             <span class="brand-name">Bloomstead<span>FARMS</span></span>
           </a>
-          <p>Connecting the richness of Nigerian agriculture with the opportunity of global markets.</p>
-          <a class="footer-email" href="mailto:trade&#64;bloomsteadfarms.ng">trade&#64;bloomsteadfarms.ng <span aria-hidden="true">↗</span></a>
+          <p>Nigerian agricultural products for buyers around the world.</p>
+          <a class="footer-email" href="mailto:trade&#64;bloomsteadfarms.ng">trade&#64;bloomsteadfarms.ng <bf-icon name="arrow-up-right" /></a>
         </div>
         <div class="footer-links">
           <h3>Explore</h3>
@@ -24,14 +25,14 @@ import { RouterLink } from '@angular/router';
           <a routerLink="/compliance">Export &amp; compliance</a>
         </div>
         <div class="footer-links">
-          <h3>Let’s talk trade</h3>
-          <p>Have a volume, destination or specification in mind? Tell us what you need.</p>
-          <a class="footer-cta" routerLink="/contact">Start an enquiry <span aria-hidden="true">↗</span></a>
+          <h3>Need a supplier?</h3>
+          <p>Tell us the product, quantity and destination.</p>
+          <a class="footer-cta" routerLink="/contact">Start an enquiry <bf-icon name="arrow-up-right" /></a>
         </div>
       </div>
       <div class="container footer-bottom">
-        <span>© 2025 Bloomstead Farms. All rights reserved.</span>
-        <span>Nigeria · Connecting to global markets</span>
+        <span>© 2026 Bloomstead Farms. All rights reserved.</span>
+        <span>Based in Nigeria</span>
       </div>
     </footer>
   `

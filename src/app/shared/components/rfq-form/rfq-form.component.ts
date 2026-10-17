@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute } from '@angular/router';
 import { CommodityService } from '../../../core/services/commodity.service';
 import { Enquiry } from '../../../core/models/enquiry.model';
+import { IconComponent } from '../icon/icon.component';
 
 interface RfqFormControls {
   fullName: FormControl<string>;
@@ -19,21 +20,21 @@ interface RfqFormControls {
 @Component({
   selector: 'bf-rfq-form',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, IconComponent],
   template: `
     @if (submitted()) {
       <div class="success-panel" role="status" aria-live="polite">
-        <span class="success-icon" aria-hidden="true">✓</span>
+        <span class="success-icon"><bf-icon name="check" /></span>
         <p class="eyebrow">Enquiry received</p>
-        <h2>Thank you for starting a conversation.</h2>
-        <p>Your enquiry has been recorded in this presentation demo. Connect a backend to deliver it to the bloomstead Farms trade team.</p>
+        <h2>Thanks for your enquiry.</h2>
+        <p>This demo saves your enquiry in the browser only. It does not send it to our team.</p>
         <button class="button button-outline" type="button" (click)="startAnother()">Send another enquiry</button>
       </div>
     } @else {
       <form class="rfq-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
         <div class="form-section-heading">
           <span class="step-number">01</span>
-          <div><h3>Your details</h3><p>Tell us who we’ll be working with.</p></div>
+          <div><h3>Your details</h3><p>How can we reach you?</p></div>
         </div>
         <div class="form-grid">
           <label class="field">
@@ -42,37 +43,37 @@ interface RfqFormControls {
             @if (showError('fullName')) { <small>Please enter your full name.</small> }
           </label>
           <label class="field">
-            <span>Corporate email <b>*</b></span>
+            <span>Work email <b>*</b></span>
             <input formControlName="corporateEmail" type="email" autocomplete="email" placeholder="you&#64;company.com">
             @if (showError('corporateEmail')) { <small>Enter a valid business email address.</small> }
           </label>
           <label class="field">
-            <span>Phone / WhatsApp <b>*</b></span>
+            <span>Phone or WhatsApp <b>*</b></span>
             <input formControlName="phone" type="tel" autocomplete="tel" placeholder="+234 800 000 0000">
             @if (showError('phone')) { <small>Please enter a reachable phone number.</small> }
           </label>
           <label class="field">
-            <span>Company name <b>*</b></span>
+            <span>Company <b>*</b></span>
             <input formControlName="companyName" autocomplete="organization" placeholder="Your organisation">
             @if (showError('companyName')) { <small>Please enter your company name.</small> }
           </label>
         </div>
         <div class="form-section-heading form-section-next">
           <span class="step-number">02</span>
-          <div><h3>Trade requirements</h3><p>A few details help us prepare a relevant response.</p></div>
+          <div><h3>Your order</h3><p>What product and quantity do you need?</p></div>
         </div>
         <div class="form-grid">
           <label class="field">
-            <span>Destination country <b>*</b></span>
+            <span>Delivery country <b>*</b></span>
             <input formControlName="destinationCountry" autocomplete="country-name" placeholder="e.g. Netherlands">
             @if (showError('destinationCountry')) { <small>Please enter a destination country.</small> }
           </label>
           <label class="field">
-            <span>Port of discharge</span>
+            <span>Port (if known)</span>
             <input formControlName="portOfDischarge" placeholder="e.g. Rotterdam">
           </label>
           <fieldset class="field field-wide">
-            <legend>Commodity of interest <b>*</b></legend>
+            <legend>Products <b>*</b></legend>
             <div class="checkbox-grid">
               @for (commodity of commodityOptions; track commodity) {
                 <label class="checkbox-option">
@@ -84,7 +85,7 @@ interface RfqFormControls {
             @if (showError('commodities')) { <small>Select at least one commodity.</small> }
           </fieldset>
           <fieldset class="field field-wide">
-            <legend>Required tonnage <b>*</b> <span class="field-hint">Select all that apply</span></legend>
+            <legend>Order size <b>*</b> <span class="field-hint">Choose all that apply</span></legend>
             <div class="checkbox-grid tonnage-grid">
               @for (volume of volumeOptions; track volume) {
                 <label class="checkbox-option">
@@ -96,13 +97,13 @@ interface RfqFormControls {
             @if (showError('requiredTonnage')) { <small>Please select an approximate volume.</small> }
           </fieldset>
           <label class="field">
-            <span>Additional requirements</span>
-            <textarea formControlName="message" rows="3" placeholder="Grade, packaging, target shipment window or anything else we should know."></textarea>
+            <span>Extra details</span>
+            <textarea formControlName="message" rows="3" placeholder="Grade, packing or delivery date"></textarea>
           </label>
         </div>
         <div class="form-submit-row">
-          <p><span>*</span> Required fields. Your information is used only to respond to this enquiry.</p>
-          <button class="button button-primary" type="submit">Send trade enquiry <span aria-hidden="true">↗</span></button>
+          <p><span>*</span> Required fields.</p>
+          <button class="button button-primary" type="submit">Send enquiry <bf-icon name="arrow-up-right" /></button>
         </div>
       </form>
     }
@@ -113,8 +114,13 @@ export class RfqFormComponent implements OnInit {
   private readonly commodityService = inject(CommodityService);
 
   readonly submitted = signal(false);
-  readonly commodityOptions = ['Sesame Seeds', 'Cashew Nuts', 'Dried Ginger', 'Shea Nuts', 'Yellow Maize', 'Dried Cassava'];
-  readonly volumeOptions = ['1 × 20ft FCL (approx. 18–25 MT)', '1 × 40ft FCL (approx. 25–28 MT)', 'Multiple containers', 'Flexible / to be discussed'];
+  readonly commodityOptions = this.commodityService.commodities().map((commodity) => commodity.name);
+  readonly volumeOptions = [
+    '1 × 20ft container (about 18–25 tonnes)',
+    '1 × 40ft container (about 25–28 tonnes)',
+    'Several containers',
+    'Not sure yet'
+  ];
 
   readonly form = new FormGroup<RfqFormControls>({
     fullName: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(2)] }),

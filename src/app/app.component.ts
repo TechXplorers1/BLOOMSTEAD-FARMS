@@ -2,11 +2,12 @@ import { Component, HostListener, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { HeaderComponent } from './shared/components/header/header.component';
+import { IconComponent } from './shared/components/icon/icon.component';
 
 @Component({
   selector: 'bf-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, FooterComponent],
+  imports: [RouterOutlet, HeaderComponent, FooterComponent, IconComponent],
   template: `
     <bf-header />
     <main id="main-content">
@@ -15,7 +16,7 @@ import { HeaderComponent } from './shared/components/header/header.component';
     <bf-footer />
     @if (showBackToTop()) {
       <button class="back-to-top" type="button" aria-label="Back to top" (click)="scrollToTop()">
-        <span aria-hidden="true">↑</span>
+        <bf-icon name="arrow-up" />
       </button>
     }
   `
